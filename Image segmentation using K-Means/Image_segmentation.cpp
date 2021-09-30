@@ -136,7 +136,7 @@ int main() {
     waitKey(0);
     destroyWindow(windowName);
 
-    Mat segmentedImage = KMeans(2);
+    Mat segmentedImage = KMeans(2); // 2 means two segments will be formed
 
     // Display segmented image
     windowName = "Segmented image";
