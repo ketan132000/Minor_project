@@ -14,8 +14,6 @@ int main(int argc, const char **argv)
     //Window name declaration
     const char *window1 = "Unprocessed";
     const char *window2 = "Sobel Edge Detector";
-    const char *window3 = "Laplace Edge Detector";
-    const char *window4 = "Canny Edge Detector";
 
     //Sobel variable declaration
     int scale = 1;
@@ -24,15 +22,6 @@ int main(int argc, const char **argv)
     Mat D_x, D_y;
     Mat abs_D_x, abs_D_y;
     Mat SobelOP;
-
-    //Laplace variable declaration
-    int kernel_size = 3;
-    Mat blurred1, outputL, LaplaceOP;
-
-    //Canny variable declaration
-    int aperture_size = 3;
-    int threshold = 90;
-    Mat blurred2, CannyOP;
 
     //check whether the image is loaded or not
     if (inputimage.empty())
@@ -45,8 +34,6 @@ int main(int argc, const char **argv)
     //Creating windows with corresponding names
     namedWindow(window1); //create a window with the name "Unprocessed image"
     namedWindow(window2); //create a window with the name "Sobel Edge Detector"
-    namedWindow(window3); //create a window with the name "Laplace Edge Detector"
-    namedWindow(window4); //create a window with the name "Canny Edge Detector"
 
     //SOBEL EDGE DETECTION
 
@@ -58,25 +45,12 @@ int main(int argc, const char **argv)
 
     addWeighted(abs_D_x, 0.5, abs_D_y, 0.5, 0, SobelOP); //merging the horizontal and vertical derivatives into a single image
 
-    //LAPLACIAN EDGE DETECTION
-    GaussianBlur(inputimage, blurred1, Size(3, 3), 0, 0, BORDER_DEFAULT); //to remove the noise in the image
-    Laplacian(blurred1, outputL, ddepth, kernel_size, scale, delta, BORDER_DEFAULT);
-    convertScaleAbs(outputL, LaplaceOP); //convert to a CV_8U image
-
-    //CANNY EDGE DETECTION
-    blur(inputimage, blurred2, Size(3, 3)); //to remove the noise in the image
-    Canny(blurred2, CannyOP, threshold, threshold / 3, aperture_size, true);
-
     //Displaying the edge map in different windows
-    imshow(window4, CannyOP);
-    imshow(window3, LaplaceOP);
     imshow(window2, SobelOP);
     imshow(window1, inputimage);
 
     //Storing the edge map with corresponding file name
     imwrite("SobelFinal_output.jpg", SobelOP);
-    imwrite("LaplaceFinal_output.jpg", LaplaceOP);
-    imwrite("CannyFinal_output.jpg", CannyOP);
 
     waitKey(0); //wait infinite time for a keypress
     return 0;
