@@ -6,6 +6,39 @@
 using namespace std;
 using namespace cv;
 
+void plotHistogram(vector<int> histogram) {
+    int image_w = 512 * 2;
+    int image_h = 800;
+    int binW = image_w / 256.0;
+    int pad = 60;
+    Mat image(image_h + 2 * pad, image_w + 2 * pad, CV_8UC1, Scalar(255));
+    float maxFreq = *max_element(histogram.begin(), histogram.end());
+
+    // Put text on the image
+    putText(image, "Histogram of pixels", Point(image_w/3, pad/2), 
+            FONT_HERSHEY_DUPLEX, 1, Scalar(0));
+
+    vector<int> height(256, 0);
+    for (int i = 0; i <= 255; i++)
+        height[i] = (histogram[i] / maxFreq) * image_h;
+
+    // draw bins
+    int thickness = 2;
+    for (int i = 0; i <= 255; i++) {
+        int x1, y1, x2, y2;
+        x1 = x2 = binW * i + pad;
+        y1 = image_h + pad;
+        y2 = y1 - height[i];
+        line(image, Point(x1, y1), Point(x2, y2), Scalar(0), thickness);
+    }
+
+    String windowName = "Histogram";
+    namedWindow(windowName, WINDOW_NORMAL);
+    imshow(windowName, image);
+    waitKey(0);
+    destroyWindow(windowName);
+}
+
 int calculateThreshold(Mat image) {
     vector<int> histogram(256, 0);
     for (int r = 0; r < image.rows; r++) {
@@ -14,6 +47,8 @@ int calculateThreshold(Mat image) {
             histogram[pixel]++;
         }
     }
+    
+    plotHistogram(histogram);
 
     int size = image.rows * image.cols;
     long long sum = 0;
