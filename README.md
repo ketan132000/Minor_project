@@ -2,7 +2,7 @@
 
 # **Image Segmentation**
 
-Here we implement the four different image segementation algorithms and compare their results with each other. 
+Here we implement the four different image segementation algorithms and compare their results with each other on different grey scale images.
 1. K-mean clustering
 2. Otsu Thresholding
 3. Edge based Detection
