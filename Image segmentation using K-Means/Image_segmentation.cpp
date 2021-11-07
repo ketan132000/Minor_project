@@ -114,9 +114,9 @@ Mat KMeans(int k, int maxIter = 100) {
             int r = point.first;
             int c = point.second;
             if (flag == 0)
-                image.at<uchar>(r, c) = 0;
+                segmentedImage.at<uchar>(r, c) = 0;
             else
-                image.at<uchar>(r, c) = 255;
+                segmentedImage.at<uchar>(r, c) = 255;
         }
         flag++;
     }
