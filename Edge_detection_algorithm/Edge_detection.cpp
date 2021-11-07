@@ -6,14 +6,16 @@
 using namespace cv;
 using namespace std;
 
-int main(int argc, const char **argv)
+int main(int argc, const char** argv)
 {
     //read the image data, in the file in the mentioned location, in grayscale and store it in 'inputimage'
-    Mat inputimage = imread("C:\\Users\\Jay\\OneDrive\\Pictures\\Saved Pictures\\LordKrishnaPhoto.jpg", 0);
+    Mat inputimage = imread("C:\\Users\\Gjay3\\OneDrive\\Pictures\\Saved Pictures\\LordKrishnaPhoto.jpg",0);
 
     //Window name declaration
-    const char *window1 = "Unprocessed";
-    const char *window2 = "Sobel Edge Detector";
+    const char* window1 = "Original image";
+    const char* window2 = "Sobel Edge Detector";
+    const char* window3 = "X-Deivative";
+    const char* window4 = "Y-Derivative";
 
     //Sobel variable declaration
     int scale = 1;
@@ -34,9 +36,11 @@ int main(int argc, const char **argv)
     //Creating windows with corresponding names
     namedWindow(window1); //create a window with the name "Unprocessed image"
     namedWindow(window2); //create a window with the name "Sobel Edge Detector"
+    namedWindow(window3); //create a window with the name "X-derivative"
+    namedWindow(window4); //create a window with the name "Y-derivative"
 
     //SOBEL EDGE DETECTION
-
+   
     Sobel(inputimage, D_x, ddepth, 1, 0, 3, scale, delta, BORDER_DEFAULT); //computing the horizontal derivative
     Sobel(inputimage, D_y, ddepth, 0, 1, 3, scale, delta, BORDER_DEFAULT); //computing the vertical derivative
 
@@ -48,6 +52,8 @@ int main(int argc, const char **argv)
     //Displaying the edge map in different windows
     imshow(window2, SobelOP);
     imshow(window1, inputimage);
+    imshow(window3, abs_D_x);
+    imshow(window4, abs_D_y);
 
     //Storing the edge map with corresponding file name
     imwrite("SobelFinal_output.jpg", SobelOP);
@@ -58,6 +64,4 @@ int main(int argc, const char **argv)
     //destroy the window
     destroyWindow(window1);
     destroyWindow(window2);
-    destroyWindow(window3);
-    destroyWindow(window4);
 }
