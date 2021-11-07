@@ -1,3 +1,5 @@
+//including libraries
+
 #include<iostream>
 #include<string>
 #include<vector>
@@ -6,7 +8,9 @@
 using namespace std;
 using namespace cv;
 
-void plotHistogram(vector<int> histogram) {
+//function to plot histogram 
+
+void plotHistogram(vector<double> histogram) {
     int image_w = 512 * 2;
     int image_h = 800;
     int binW = image_w / 256.0;
@@ -15,8 +19,8 @@ void plotHistogram(vector<int> histogram) {
     float maxFreq = *max_element(histogram.begin(), histogram.end());
 
     // Put text on the image
-    putText(image, "Histogram of pixels", Point(image_w/3, pad/2), 
-            FONT_HERSHEY_DUPLEX, 1, Scalar(0));
+    putText(image, "Histogram of pixels", Point(image_w / 3, pad / 2),
+        FONT_HERSHEY_DUPLEX, 1, Scalar(0));
 
     vector<int> height(256, 0);
     for (int i = 0; i <= 255; i++)
@@ -32,29 +36,30 @@ void plotHistogram(vector<int> histogram) {
         line(image, Point(x1, y1), Point(x2, y2), Scalar(0), thickness);
     }
 
-    String windowName = "Histogram";
-    namedWindow(windowName, WINDOW_NORMAL);
-    imshow(windowName, image);
-    waitKey(0);
-    destroyWindow(windowName);
+    //declaring window for histogram
+    String windowName2 = "Histogram";
+    namedWindow(windowName2, WINDOW_NORMAL);
+    imshow(windowName2, image);
 }
 
+
+//Function to calculate threshold value of the greyscale image 
 int calculateThreshold(Mat image) {
-    vector<int> histogram(256, 0);
+    vector<double> histogram(256, 0);
     for (int r = 0; r < image.rows; r++) {
         for (int c = 0; c < image.cols; c++) {
             int pixel = image.at<uchar>(r, c);
             histogram[pixel]++;
         }
     }
-    
+
     plotHistogram(histogram);
 
     int size = image.rows * image.cols;
     long long sum = 0;
     for (int i = 0; i <= 255; i++)
         sum += i * histogram[i];
-    int w1, w2;
+    long double w1, w2;
     w1 = w2 = 0;
     long double currSum = 0;
     int T = 0;
@@ -82,6 +87,7 @@ int calculateThreshold(Mat image) {
     return T;
 }
 
+
 Mat applyBinarization(Mat image, int T) {
     for (int r = 0; r < image.rows; r++) {
         for (int c = 0; c < image.cols; c++) {
@@ -96,7 +102,7 @@ Mat applyBinarization(Mat image, int T) {
 }
 
 int main() {
-    Mat image = imread(" IMAGE PATH ", IMREAD_GRAYSCALE);
+    Mat image = imread("C:\\Users\\Gjay3\\OneDrive\\Pictures\\Saved Pictures\\LordKrishnaPhoto.jpg", IMREAD_GRAYSCALE);
     if (image.empty()) {
         cout << "Image not found!" << endl;
         cin.get();
@@ -104,16 +110,20 @@ int main() {
     }
 
     String windowName = "Original image";
+    String windowName1 = "Segmented image";
+    String windowName2 = "Histogram";
+
     namedWindow(windowName, WINDOW_NORMAL);
     imshow(windowName, image);
-    waitKey(0);
-    destroyWindow(windowName);
     int T = calculateThreshold(image);
+    cout << "Threshold value of the image is:" << T;
     Mat segmentedImage = applyBinarization(image, T);
-    windowName = "Segmented image";
-    namedWindow(windowName, WINDOW_NORMAL);
-    imshow(windowName, segmentedImage);
+    windowName1 = "Segmented image";
+    namedWindow(windowName1, WINDOW_NORMAL);
+    imshow(windowName1, segmentedImage);
     waitKey(0);
     destroyWindow(windowName);
+    destroyWindow(windowName1);
+    destroyWindow(windowName2);
     return 0;
 }
