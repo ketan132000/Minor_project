@@ -64,4 +64,6 @@ int main(int argc, const char** argv)
     //destroy the window
     destroyWindow(window1);
     destroyWindow(window2);
+    destroyWindow(window3);
+    destroyWindow(window4);
 }
