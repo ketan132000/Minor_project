@@ -1,3 +1,5 @@
+//Including libraries
+
 #include<iostream>
 #include<string>
 #include<vector>
@@ -8,6 +10,7 @@
 
 using namespace std;
 using namespace cv;
+
 
 Mat image;
 vector<vector<pair<int, int>>> clusters;
@@ -25,11 +28,13 @@ set<int> initialCenters(int k) {
     return centers;
 }
 
+//function to calculate the centres
+
 set<int> calculateCenters() {
-    int n = clusters.size();
+    int n = (int)clusters.size();
     set<int> centers;
     for (int i = 0; i < n; i++) {
-        long long center = 0;
+        int center = 0;
         for (auto it : clusters[i]) {
             int r = it.first;
             int c = it.second;
@@ -37,7 +42,7 @@ set<int> calculateCenters() {
             center += pixel;
         }
         if (clusters[i].size() != 0) {
-            center /= clusters[i].size();
+            center /= (int)clusters[i].size();
             centers.insert(center);
         }
     }
@@ -75,6 +80,7 @@ void iterations(set<int> centers) {
     }
 }
 
+//Function to apply k-mean cluster algorithm on the grey scale image
 Mat KMeans(int k, int maxIter = 100) {
     set<int> prev_centers;
     set<int> centers = initialCenters(k);
@@ -108,9 +114,9 @@ Mat KMeans(int k, int maxIter = 100) {
             int r = point.first;
             int c = point.second;
             if (flag == 0)
-                image.at<uchar>(r, c) = 0;
+                segmentedImage.at<uchar>(r, c) = 0;
             else
-                image.at<uchar>(r, c) = 255;
+                segmentedImage.at<uchar>(r, c) = 255;
         }
         flag++;
     }
@@ -119,10 +125,11 @@ Mat KMeans(int k, int maxIter = 100) {
 }
 
 int main() {
-    srand(time(0));
-
+   
     // Read original image
-    image = imread("Add path here", IMREAD_GRAYSCALE);
+    image = imread("C:\\Users\\Gjay3\\OneDrive\\Pictures\\Saved Pictures\\LordKrishnaPhoto.jpg", IMREAD_GRAYSCALE);
+
+    //condition to check whether image is available or not for processing
     if (image.empty()) {
         cout << "Image not found!" << endl;
         cin.get();
@@ -131,18 +138,18 @@ int main() {
 
     // Display original image
     String windowName = "Original image";
+    String windowName2 = "Segmented image";
     namedWindow(windowName, WINDOW_NORMAL);
     imshow(windowName, image);
-    waitKey(0);
-    destroyWindow(windowName);
+    
+    //calling the Kmean function 
 
     Mat segmentedImage = KMeans(2); // 2 means two segments will be formed
 
-    // Display segmented image
-    windowName = "Segmented image";
-    namedWindow(windowName, WINDOW_NORMAL);
-    imshow(windowName, segmentedImage);
+    namedWindow(windowName2, WINDOW_NORMAL);
+    imshow(windowName2, segmentedImage);
     waitKey(0);
     destroyWindow(windowName);
+    destroyWindow(windowName2);
     return 0;
 }
