@@ -21,6 +21,8 @@ int main()
     Mat abs_D_x_image, abs_D_y_image;
     Mat SobelOP;
 
+   
+
     //check whether the image is loaded or not
     if (inputimage.empty())
     {
@@ -50,6 +52,7 @@ int main()
     imshow(window1, inputimage);
     imshow(window3, abs_D_x_image);
     imshow(window4, abs_D_y_image);
+    
 
     waitKey(0); //wait infinite time for a keypress
     return 0;
