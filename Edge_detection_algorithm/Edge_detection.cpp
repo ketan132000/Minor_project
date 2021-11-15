@@ -1,21 +1,19 @@
-#include "opencv2/imgproc.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui.hpp"
+#include<opencv2/opencv.hpp>
 #include <iostream>
 
 using namespace cv;
 using namespace std;
 
-int main(int argc, const char** argv)
+int main()
 {
     //read the image data, in the file in the mentioned location, in grayscale and store it in 'inputimage'
     Mat inputimage = imread("C:\\Users\\Gjay3\\Desktop\\Minor_project_final\\Test_image.jpg", 0);
 
     //Window name declaration
-    const char* window1 = "Original image";
-    const char* window2 = "Sobel Edge Detector";
-    const char* window3 = "X-Deivative";
-    const char* window4 = "Y-Derivative";
+    string window1 = "Original image";
+    string window2 = "Sobel Edge Detector";
+    string window3 = "X-Deivative";
+    string window4 = "Y-Derivative";
 
     //Sobel variable declaration
     int ddepth = CV_16S; //to avoid overflow
