@@ -9,7 +9,7 @@ using namespace std;
 int main(int argc, const char** argv)
 {
     //read the image data, in the file in the mentioned location, in grayscale and store it in 'inputimage'
-    Mat inputimage = imread("C:\\Users\\Gjay3\\OneDrive\\Pictures\\Saved Pictures\\LordKrishnaPhoto.jpg",0);
+    Mat inputimage = imread("C:\\Users\\Gjay3\\Desktop\\Minor_project_final\\Test_image.jpg", 0);
 
     //Window name declaration
     const char* window1 = "Original image";
@@ -18,11 +18,9 @@ int main(int argc, const char** argv)
     const char* window4 = "Y-Derivative";
 
     //Sobel variable declaration
-    int scale = 1;
-    int delta = 0;
     int ddepth = CV_16S; //to avoid overflow
-    Mat D_x, D_y;
-    Mat abs_D_x, abs_D_y;
+    Mat D_x_image, D_y_image;
+    Mat abs_D_x_image, abs_D_y_image;
     Mat SobelOP;
 
     //check whether the image is loaded or not
@@ -40,23 +38,20 @@ int main(int argc, const char** argv)
     namedWindow(window4); //create a window with the name "Y-derivative"
 
     //SOBEL EDGE DETECTION
-   
-    Sobel(inputimage, D_x, ddepth, 1, 0, 3, scale, delta, BORDER_DEFAULT); //computing the horizontal derivative
-    Sobel(inputimage, D_y, ddepth, 0, 1, 3, scale, delta, BORDER_DEFAULT); //computing the vertical derivative
 
-    convertScaleAbs(D_x, abs_D_x); //converting back to CV_8U
-    convertScaleAbs(D_y, abs_D_y);
+    Sobel(inputimage, D_x_image, ddepth, 1, 0, 3); //computing the horizontal derivative
+    Sobel(inputimage, D_y_image, ddepth, 0, 1, 3); //computing the vertical derivative
 
-    addWeighted(abs_D_x, 0.5, abs_D_y, 0.5, 0, SobelOP); //merging the horizontal and vertical derivatives into a single image
+    convertScaleAbs(D_x_image, abs_D_x_image); //converting back to CV_8U
+    convertScaleAbs(D_y_image, abs_D_y_image);
+
+    addWeighted(abs_D_x_image, 0.5, abs_D_y_image, 0.5,0, SobelOP); //merging the horizontal and vertical derivatives into a single image
 
     //Displaying the edge map in different windows
     imshow(window2, SobelOP);
     imshow(window1, inputimage);
-    imshow(window3, abs_D_x);
-    imshow(window4, abs_D_y);
-
-    //Storing the edge map with corresponding file name
-    imwrite("SobelFinal_output.jpg", SobelOP);
+    imshow(window3, abs_D_x_image);
+    imshow(window4, abs_D_y_image);
 
     waitKey(0); //wait infinite time for a keypress
     return 0;
