@@ -5,23 +5,18 @@
 #include<vector>
 #include<opencv2/opencv.hpp>
 
-using namespace std;
+using namespace std;  
 using namespace cv;
 
 //function to plot histogram 
 
-void plotHistogram(vector<double> histogram) {
+void plotHistogram(vector<int> histogram) {
     int image_w = 512 * 2;
     int image_h = 800;
-    int binW = image_w / 256.0;
+    int binW = image_w / 256;
     int pad = 60;
     Mat image(image_h + 2 * pad, image_w + 2 * pad, CV_8UC1, Scalar(255));
     float maxFreq = *max_element(histogram.begin(), histogram.end());
-
-    // Put text on the image
-    putText(image, "Histogram of pixels", Point(image_w / 3, pad / 2),
-        FONT_HERSHEY_DUPLEX, 1, Scalar(0));
-
     vector<int> height(256, 0);
     for (int i = 0; i <= 255; i++)
         height[i] = (histogram[i] / maxFreq) * image_h;
@@ -45,7 +40,7 @@ void plotHistogram(vector<double> histogram) {
 
 //Function to calculate threshold value of the greyscale image 
 int calculateThreshold(Mat image) {
-    vector<double> histogram(256, 0);
+    vector<int> histogram(256);
     for (int r = 0; r < image.rows; r++) {
         for (int c = 0; c < image.cols; c++) {
             int pixel = image.at<uchar>(r, c);
@@ -93,19 +88,19 @@ Mat applyBinarization(Mat image, int T) {
         for (int c = 0; c < image.cols; c++) {
             int pixel = image.at<uchar>(r, c);
             if (pixel <= T)
-                image.at<uchar>(r, c) = 0;
+                image.at<uchar>(r,c) = 0; //Foreground(BLACK)
             else
-                image.at<uchar>(r, c) = 255;
+                image.at<uchar>(r, c) = 255;//Background(WHITE)
         }
     }
     return image;
 }
 
 int main() {
-    Mat image = imread("C:\\Users\\Gjay3\\OneDrive\\Pictures\\Saved Pictures\\LordKrishnaPhoto.jpg", IMREAD_GRAYSCALE);
+    Mat image = imread("C:/Users/DELL/Downloads/finalimage.jpg", IMREAD_GRAYSCALE); //Stores pixel values of the image in matrix form.
     if (image.empty()) {
         cout << "Image not found!" << endl;
-        cin.get();
+       // cin.get(); //terminates when whitespace is found.
         return -1;
     }
 
@@ -113,13 +108,12 @@ int main() {
     String windowName1 = "Segmented image";
     String windowName2 = "Histogram";
 
-    namedWindow(windowName, WINDOW_NORMAL);
-    imshow(windowName, image);
+    namedWindow(windowName);// Creates a window that will be used to store the image.
+    imshow(windowName, image);//Display the window that contains the image along with its name
     int T = calculateThreshold(image);
     cout << "Threshold value of the image is:" << T;
     Mat segmentedImage = applyBinarization(image, T);
-    windowName1 = "Segmented image";
-    namedWindow(windowName1, WINDOW_NORMAL);
+    namedWindow(windowName1);
     imshow(windowName1, segmentedImage);
     waitKey(0);
     destroyWindow(windowName);
